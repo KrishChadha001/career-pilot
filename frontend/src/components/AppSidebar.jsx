@@ -1,6 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Brain, ChevronDown } from "lucide-react";
 
 import {
     LayoutDashboard,
@@ -217,6 +218,7 @@ function UserSection() {
 
 export default function AppSidebar() {
     const [open, setOpen] = useState(false);
+const [openAI, setOpenAI] = useState(false);
 
     return (
         <Sidebar open={open} setOpen={setOpen}>
@@ -234,6 +236,62 @@ export default function AppSidebar() {
                             />
                         ))}
                     </div>
+                     {/* AI Tools Collapsible */}
+<div className="mt-2">
+    <button
+        onClick={() => setOpenAI(!openAI)}
+        className="flex items-center justify-between w-full px-4 py-3 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted font-semibold transition-all"
+    >
+        <div className="flex items-center gap-3">
+            <Brain className="w-5 h-5 flex-shrink-0" />
+            <span>AI Tools</span>
+        </div>
+
+        <ChevronDown
+            className={cn(
+                "w-4 h-4 transition-transform duration-300",
+                openAI && "rotate-180"
+            )}
+        />
+    </button>
+
+    <motion.div
+        initial={false}
+        animate={{
+            height: openAI ? "auto" : 0,
+            opacity: openAI ? 1 : 0,
+        }}
+        transition={{ duration: 0.3 }}
+        className="overflow-hidden ml-4 flex flex-col gap-1"
+    >
+        <SidebarLink
+            link={{
+                label: "Skill Gap Analyzer",
+                href: "/skill-gap",
+                icon: <Brain className="w-4 h-4 flex-shrink-0" />,
+            }}
+            onClick={() => setOpen(false)}
+        />
+
+        <SidebarLink
+            link={{
+                label: "Career Trajectory",
+                href: "/career-path",
+                icon: <Brain className="w-4 h-4 flex-shrink-0" />,
+            }}
+            onClick={() => setOpen(false)}
+        />
+
+        <SidebarLink
+            link={{
+                label: "Salary Estimator",
+                href: "/salary-estimate",
+                icon: <Brain className="w-4 h-4 flex-shrink-0" />,
+            }}
+            onClick={() => setOpen(false)}
+        />
+    </motion.div>
+</div>
                 </div>
                 <UserSection />
             </SidebarBody>
