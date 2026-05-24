@@ -149,44 +149,62 @@ export default function PostsFeed() {
     }
   };
 
-  const handleCreatePost = async (postData) => {
-    if (isSubmitting) return; // Prevent double-click submissions
-    setIsSubmitting(true);
-    try {
-      const data = await communityApi.createPost(postData);
-      if (data.post.status === 'scheduled') {
-        setScheduledPosts(prev => {
-          const postId = data.post.id || data.post._id;
-          if (prev.some(p => (p.id || p._id) === postId)) return prev;
-          return [data.post, ...prev].sort(
-            (a, b) => new Date(a.scheduledAt) - new Date(b.scheduledAt)
-          );
-        });
-        setShowEditor(false);
-        toast.success('Post scheduled successfully!');
-      } else {
-        // When socket is connected, the backend emits 'new_post' via
-        // Socket.IO which the listener above will pick up. We skip
-        // inserting here to avoid the duplicate.
-        // When socket is NOT connected, insert directly as a fallback
-        // (the listener's dedup guard will prevent a duplicate if the
-        // socket reconnects and delivers the event later).
-        if (!isConnected) {
-          setPosts(prev => {
-            const postId = data.post.id || data.post._id;
-            if (prev.some(p => (p.id || p._id) === postId)) return prev;
-            return [data.post, ...prev];
-          });
+const handleCreatePost = async (postData) => {
+  if (isSubmitting) return; // Prevent double-click submissions
+
+  setIsSubmitting(true);
+
+  try {
+    const data = await communityApi.createPost(postData);
+
+    if (data.post.status === 'scheduled') {
+      setScheduledPosts(prev => {
+        const postId = data.post.id || data.post._id;
+
+        if (prev.some(p => (p.id || p._id) === postId)) {
+          return prev;
         }
-        setShowEditor(false);
-        toast.success('Post created successfully!');
-      }
-    } catch (error) {
-      toast.error(error.message);
-    } finally {
-      setIsSubmitting(false);
+
+        return [data.post, ...prev].sort(
+          (a, b) =>
+            new Date(a.scheduledAt) -
+            new Date(b.scheduledAt)
+        );
+      });
+
+      setShowEditor(false);
+
+      toast.success('Post scheduled successfully!');
+    } else {
+      // Insert immediately for responsive UX.
+      // Socket listener already has duplicate protection.
+      setPosts(prev => {
+        const postId =
+          data.post.id || data.post._id;
+
+        if (
+          prev.some(
+            p => (p.id || p._id) === postId
+          )
+        ) {
+          return prev;
+        }
+
+        return [data.post, ...prev];
+      });
+
+      setShowEditor(false);
+
+      toast.success(
+        'Post created successfully!'
+      );
     }
-  };
+  } catch (error) {
+    toast.error(error.message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   const handleCancelScheduled = async (postId) => {
     try {
