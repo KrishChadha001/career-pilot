@@ -1,16 +1,7 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useAuth } from './AuthContext';
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import { initializeSocket, disconnectSocket, getSocket, socketEvents } from '../services/socket';
-
-const SocketContext = createContext(null);
-
-export function useSocket() {
-  const context = useContext(SocketContext);
-  if (!context) {
-    throw new Error('useSocket must be used within a SocketProvider');
-  }
-  return context;
-}
+import { SocketContext } from './SocketContext';
 
 export function SocketProvider({ children }) {
   const { user } = useAuth();

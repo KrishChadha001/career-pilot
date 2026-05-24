@@ -4,9 +4,10 @@ import TemplateGallery from "./pages/TemplateGallery";
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import { SocketProvider } from './context/SocketContext';
-import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider } from './context/AuthProvider';
+import { useAuth } from './hooks/useAuth';
+import { SocketProvider } from './context/SocketProvider';
+import { ThemeProvider } from './context/ThemeProvider';
 import AppLayout from './components/AppLayout';
 import Footer from './components/ui/Footer';
 

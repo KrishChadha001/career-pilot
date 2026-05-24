@@ -4,15 +4,16 @@ import { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
-const SidebarContext = createContext(undefined);
+import { SidebarContext } from "../../context/SidebarContext";
 
-export const useSidebar = () => {
+// Internal convenience — components within this file consume the context directly.
+function useSidebarInternal() {
     const context = useContext(SidebarContext);
     if (!context) {
         throw new Error("useSidebar must be used within a SidebarProvider");
     }
     return context;
-};
+}
 
 export const SidebarProvider = ({
     children,
@@ -59,7 +60,7 @@ export const DesktopSidebar = ({
     children,
     ...props
 }) => {
-    const { open, setOpen, animate } = useSidebar();
+    const { open, setOpen, animate } = useSidebarInternal();
     return (
         <motion.div
             className={cn(
@@ -87,7 +88,7 @@ export const MobileSidebar = ({
     children,
     ...props
 }) => {
-    const { open, setOpen } = useSidebar();
+    const { open, setOpen } = useSidebarInternal();
     return (
         <>
             <div
@@ -139,7 +140,7 @@ export const SidebarLink = ({
     onClick,
     ...props
 }) => {
-    const { open, animate } = useSidebar();
+    const { open, animate } = useSidebarInternal();
     const location = useLocation();
     const isActive = active !== undefined ? active : location.pathname === link.href;
 
@@ -175,7 +176,7 @@ export const SidebarLink = ({
 };
 
 export const SidebarDivider = () => {
-    const { open, animate } = useSidebar();
+    const { open, animate } = useSidebarInternal();
     return (
         <motion.div
             animate={{

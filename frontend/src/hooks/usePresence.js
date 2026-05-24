@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSocket } from '../context/SocketContext';
+import { useSocket } from './useSocket';
 
 /**
  * Custom hook to track user presence status

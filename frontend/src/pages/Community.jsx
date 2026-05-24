@@ -1,7 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useSocket } from '../context/SocketContext';
+import { useAuth } from '../hooks/useAuth';
+import { useSocket } from '../hooks/useSocket';
 import { communityApi } from '../services/api';
 import ChannelList from '../components/community/ChannelList';
 import ChatWindow from '../components/community/ChatWindow';

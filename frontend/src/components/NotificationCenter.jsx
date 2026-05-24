@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bell, BriefcaseBusiness, Mail, XCircle, CheckCheck, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useSocket } from "../context/SocketContext";
+import { useSocket } from "../hooks/useSocket";
 import { cn } from "../lib/utils";
 
 function timeAgo(date) {
