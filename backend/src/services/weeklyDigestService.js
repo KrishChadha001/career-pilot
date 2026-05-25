@@ -303,7 +303,7 @@ export const startDigestWorker = () => {
       console.log(`[WeeklyDigest] ▶️  Processing digest for user: ${userId}`);
 
       // Re-fetch the user so we always have fresh data even after retries
-      const user = await User.findOne({ uid: userId }).lean();
+      const user = await User.findById(userId).lean();
 
       if (!user) {
         // User deleted between enqueue and processing — skip gracefully
@@ -393,9 +393,9 @@ export const sendWeeklyDigests = async () => {
 
       const jobs = users.map((user) => ({
         name: 'send-digest',
-        data: { userId: user.uid },
+        data: { userId: user._id.toString() },
         opts: {
-          jobId: `digest-${user.uid}-${weekKey}`,
+          jobId: `digest-${user._id.toString()}-${weekKey}`,
           // Stagger jobs slightly to spread Gemini API load
           delay: 0
         }
