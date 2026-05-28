@@ -6,7 +6,7 @@
  *   node --test src/schemas/__tests__/emailTracker.test.js
  */
 
-import { test, describe } from 'node:test';
+import { describe, expect, test } from 'vitest';
 import assert from 'node:assert/strict';
 
 // ─── Inline the helpers we want to test ──────────────────────────────────────

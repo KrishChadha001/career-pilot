@@ -1,4 +1,4 @@
-import test, { mock } from 'node:test';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import assert from 'node:assert';
 import { 
   __setMockTransport,
@@ -23,11 +23,17 @@ __setMockTransport({
   }
 });
 
-test('Email Templates Snapshot Tests', async (t) => {
-  mock.timers.enable({ apis: ['Date'], now: new Date('2023-01-01T12:00:00Z') });
-  t.after(() => mock.timers.reset());
+describe('Email Templates Snapshot Tests', () => {
+  beforeEach(() => {
+    lastMailOptions = null;
+    vi.useFakeTimers({ now: new Date('2023-01-01T12:00:00Z') });
+  });
 
-  await t.test('sendJobApplicationEmail template', async (st) => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  test('sendJobApplicationEmail template', async () => {
     await sendJobApplicationEmail({
       recruiterEmail: 'recruiter@example.com',
       recruiterName: 'John Doe',
@@ -38,10 +44,10 @@ test('Email Templates Snapshot Tests', async (t) => {
       applicantPhone: '1234567890',
       message: 'Here is my application.'
     });
-    st.assert.snapshot(lastMailOptions.html);
+    expect(lastMailOptions.html).toMatchSnapshot();
   });
 
-  await t.test('sendMatchingJobMail template', async (st) => {
+  test('sendMatchingJobMail template', async () => {
     await sendMatchingJobMail({
       userEmail: 'user@example.com',
       userName: 'Jane Smith',
@@ -54,10 +60,10 @@ test('Email Templates Snapshot Tests', async (t) => {
       applyLink: 'https://example.com/apply',
       postedDate: '2023-01-01'
     });
-    st.assert.snapshot(lastMailOptions.html);
+    expect(lastMailOptions.html).toMatchSnapshot();
   });
 
-  await t.test('sendJobAlertEmail template', async (st) => {
+  test('sendJobAlertEmail template', async () => {
     await sendJobAlertEmail({
       userEmail: 'user@example.com',
       userName: 'Jane Smith',
@@ -77,19 +83,19 @@ test('Email Templates Snapshot Tests', async (t) => {
         }
       ]
     });
-    st.assert.snapshot(lastMailOptions.html);
+    expect(lastMailOptions.html).toMatchSnapshot();
   });
 
-  await t.test('sendWeeklyDigestEmail template', async (st) => {
+  test('sendWeeklyDigestEmail template', async () => {
     await sendWeeklyDigestEmail({
       userEmail: 'user@example.com',
       userName: 'Jane Smith',
       html: '<h1>Weekly Digest</h1><p>Here are your updates...</p>'
     });
-    st.assert.snapshot(lastMailOptions.html);
+    expect(lastMailOptions.html).toMatchSnapshot();
   });
 
-  await t.test('sendProposalApprovalEmail template', async (st) => {
+  test('sendProposalApprovalEmail template', async () => {
     await sendProposalApprovalEmail({
       studentEmail: 'student@example.com',
       studentName: 'Jane Smith',
@@ -101,24 +107,24 @@ test('Email Templates Snapshot Tests', async (t) => {
       feedback: 'Looks good!',
       chatRoomId: 'room123'
     });
-    st.assert.snapshot(lastMailOptions.html);
+    expect(lastMailOptions.html).toMatchSnapshot();
   });
 
-  await t.test('sendLockoutAlertEmail template', async (st) => {
+  test('sendLockoutAlertEmail template', async () => {
     await sendLockoutAlertEmail({
       email: 'user@example.com',
       ip: '192.168.1.1',
       lockoutUntil: '2023-01-01T12:00:00Z'
     });
-    st.assert.snapshot(lastMailOptions.html);
+    expect(lastMailOptions.html).toMatchSnapshot();
   });
 
-  await t.test('sendVerificationEmail template', async (st) => {
+  test('sendVerificationEmail template', async () => {
     await sendVerificationEmail({
       email: 'user@example.com',
       code: '123456'
     });
-    st.assert.snapshot(lastMailOptions.html);
+    expect(lastMailOptions.html).toMatchSnapshot();
   });
 
 });

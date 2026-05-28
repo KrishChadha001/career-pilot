@@ -10,7 +10,7 @@
  * No additional test dependencies are needed.
  */
 
-import { test, describe } from 'node:test';
+import { describe, expect, test } from 'vitest';
 import assert from 'node:assert/strict';
 import { z } from 'zod';
 
@@ -771,13 +771,15 @@ describe('validate middleware', () => {
     return { req, res };
   };
 
-  test('calls next() on valid input and mutates req.body', (t, done) => {
+  test('calls next() on valid input and mutates req.body', () => {
     const { req, res } = makeReqRes({ name: 'Alice' });
     const mw = validate(mockSchema);
+    let nextCalled = false;
     mw(req, res, () => {
+      nextCalled = true;
       assert.equal(req.body.name, 'Alice');
-      done();
     });
+    assert.equal(nextCalled, true);
   });
 
   test('returns 400 with structured details on invalid input', () => {
@@ -791,13 +793,15 @@ describe('validate middleware', () => {
     assert.equal(res._json.details[0].field, 'name');
   });
 
-  test('validates query when target=query', (t, done) => {
+  test('validates query when target=query', () => {
     const req = { query: { name: 'Bob' } };
     const res = {};
     const mw = validate(mockSchema, 'query');
+    let nextCalled = false;
     mw(req, res, () => {
+      nextCalled = true;
       assert.equal(req.query.name, 'Bob');
-      done();
     });
+    assert.equal(nextCalled, true);
   });
 });

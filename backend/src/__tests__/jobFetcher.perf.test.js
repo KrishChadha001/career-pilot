@@ -15,7 +15,7 @@
  * Uses Node.js built-in `node:test` (Node >= 18, no extra dependencies).
  */
 
-import { describe, test, beforeEach } from 'node:test';
+import { beforeEach, describe, expect, test } from 'vitest';
 import assert from 'node:assert/strict';
 
 // ─── Mirror of bulkUpsertJobs (matches backend/src/services/jobFetcher.js) ───
